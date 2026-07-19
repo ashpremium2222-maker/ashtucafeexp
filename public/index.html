@@ -144,8 +144,205 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);-webk
 .history-detail .bill-actions{display:flex;gap:8px;margin-top:8px;}
 #receipt{display:none;}
 @media print{body *{visibility:hidden;}#receipt,#receipt *{visibility:visible;}#receipt{display:block;position:absolute;top:0;left:0;width:300px;font-family:monospace;color:#000;padding:10px;}#receipt .rname{font-size:1.2rem;text-align:center;font-weight:700;}#receipt .rsub{text-align:center;font-size:0.75rem;margin-bottom:10px;}#receipt .rline{border-top:1px dashed #000;margin:8px 0;}#receipt .rrow{display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:4px;}#receipt .rtotal{font-weight:700;font-size:1rem;}#receipt .rfoot{text-align:center;font-size:0.75rem;margin-top:14px;}}
-@media(max-width:1100px){:root{--order-w:300px;}.stats-grid{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:820px){.sidenav{display:none;}.main-content{margin-left:0;margin-right:0;}.order-panel{display:none;}.stats-grid{grid-column:1fr 1fr;}}
+/* Mobile responsive layout */
+@media (max-width: 1100px) {
+  :root {
+    --order-w: 300px;
+  }
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 820px) {
+  :root {
+    --sidebar-w: 0px;
+    --order-w: 0px;
+  }
+  .sidenav {
+    display: none !important;
+  }
+  .main-content {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-bottom: 80px; /* space for mobile-nav */
+  }
+  .order-panel {
+    position: fixed !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 100% !important;
+    right: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    z-index: 150 !important;
+    transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: -5px 0 25px rgba(0,0,0,0.15) !important;
+    border-left: none !important;
+  }
+  .order-panel.show-mobile {
+    left: 0 !important;
+  }
+  .close-cart-btn {
+    display: flex !important;
+  }
+  .mobile-cart-fab {
+    display: flex !important;
+  }
+  .mobile-nav {
+    display: flex !important;
+  }
+  .page {
+    padding: 16px 16px 80px !important;
+  }
+  .page-section {
+    padding: 0 16px 80px !important;
+  }
+  .stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+    margin-bottom: 20px !important;
+  }
+  .stat-card {
+    padding: 14px 16px !important;
+    gap: 10px !important;
+  }
+  .stat-value {
+    font-size: 1.2rem !important;
+  }
+  .topbar {
+    padding: 12px 16px !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+  .topbar-right {
+    width: 100% !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+    overflow-x: auto !important;
+    padding-bottom: 4px !important;
+  }
+  .topbar-date {
+    display: none !important;
+  }
+  .topbar-date-wrapper span {
+    display: none !important;
+  }
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
+    gap: 12px !important;
+  }
+  .card-img {
+    height: 90px !important;
+    font-size: 2.2rem !important;
+  }
+  .item-card .name {
+    font-size: 0.82rem !important;
+  }
+  .item-card .price {
+    font-size: 0.85rem !important;
+  }
+}
+
+/* Mobile Navigation styles */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  z-index: 140;
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: env(safe-area-inset-bottom);
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+}
+.mobile-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-soft);
+  text-decoration: none;
+  font-size: 0.68rem;
+  font-weight: 600;
+  gap: 4px;
+  flex: 1;
+  height: 100%;
+  transition: all 0.15s;
+}
+.mobile-nav-item svg {
+  width: 20px;
+  height: 20px;
+}
+.mobile-nav-item.active {
+  color: var(--primary);
+}
+
+/* Floating Cart Action Button */
+.mobile-cart-fab {
+  display: none;
+  position: fixed;
+  bottom: 76px;
+  right: 16px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(108,92,231,0.4);
+  z-index: 130;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.15s, background 0.15s;
+}
+.mobile-cart-fab:active {
+  transform: scale(0.9);
+}
+.mobile-cart-fab svg {
+  width: 24px;
+  height: 24px;
+}
+.mobile-cart-fab .badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--danger);
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 7px;
+  border-radius: 10px;
+  border: 2px solid var(--white);
+}
+
+/* Close cart button for mobile */
+.close-cart-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-soft);
+  cursor: pointer;
+  padding: 4px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+.close-cart-btn:hover {
+  background: var(--bg);
+  color: var(--text);
+}
+.close-cart-btn svg {
+  width: 20px;
+  height: 20px;
+}
 .page-section{display:none;padding:0 32px 32px;}
 .page-section.active{display:block;}
 .section-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);margin-bottom:20px;}
@@ -252,7 +449,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);-webk
 </div>
 <aside class="order-panel">
   <div class="order-header">
-    <h2>Current Order</h2>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="close-cart-btn" onclick="toggleMobileCart(false)" title="Close Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <h2>Current Order</h2>
+    </div>
     <div style="display:flex;align-items:center;gap:8px;"><span class="table-badge" id="tableBadge">Table &#x2014;</span><button class="order-meta-more">&#x22EE;</button></div>
   </div>
   <div class="order-meta">
@@ -305,9 +507,12 @@ function getEmoji(n,c){const s=(n+' '+c).toLowerCase();if(/coffee|cappuccino|lat
 function showPage(page){
   document.querySelectorAll('.page-section').forEach(el=>el.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.mobile-nav-item').forEach(el=>el.classList.remove('active'));
   document.getElementById('page-'+page).classList.add('active');
   const nav=document.getElementById('nav-'+page);
   if(nav)nav.classList.add('active');
+  const mobNav=document.getElementById('mob-nav-'+page);
+  if(mobNav)mobNav.classList.add('active');
   const titles={overview:'Overview',customers:'Customers',reports:'Reports',settings:'Settings'};
   document.querySelector('.topbar-title').textContent=titles[page]||page;
   if(page==='customers')loadCustomers();
@@ -431,7 +636,7 @@ function changeQty(el,delta){const id=el.closest('.cart-row').dataset.id;const r
 function removeFromCart(el){const id=el.closest('.cart-row').dataset.id;cart=cart.filter(c=>c.id!==id);renderCart();}
 function clearOrder(){cart=[];document.getElementById('custName').value='';document.getElementById('custPhone').value='';updateTableBadge();renderCart();}
 function updateTableBadge(){const v=document.getElementById('custName').value.trim();document.getElementById('tableBadge').textContent=v||'Table —';}
-function renderCart(){const list=document.getElementById('cartList');list.innerHTML='';if(!cart.length){list.innerHTML='<div class="cart-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>No items added yet</div>';}else{cart.forEach(row=>{const el=document.createElement('div');el.className='cart-row';el.dataset.id=row.id;const emoji=getEmoji(row.name,'');el.innerHTML='<div class="cart-img">'+emoji+'</div><div class="cart-row-info"><div class="cname">'+escapeHtml(row.name)+'</div><div class="cprice">₹'+(row.price*row.qty).toFixed(2)+'</div></div><div class="qty-ctrl"><button onclick="changeQty(this,-1)">−</button><span class="qty-num">'+row.qty+'</span><button onclick="changeQty(this,1)">+</button></div><button class="rm" onclick="removeFromCart(this)">&#x1F5D1;</button>';list.appendChild(el);});}const sub=cart.reduce((s,r)=>s+r.price*r.qty,0);const tp=parseFloat(document.getElementById('taxPct').value)||0;const ta=sub*tp/100;const tot=sub+ta;document.getElementById('subtotal').innerText='₹'+sub.toFixed(2);document.getElementById('taxAmt').innerText='₹'+ta.toFixed(2);document.getElementById('grandTotal').innerText='₹'+tot.toFixed(2);document.getElementById('chargeBtnLabel').innerText='Charge ₹'+tot.toFixed(2);}
+function renderCart(){const list=document.getElementById('cartList');list.innerHTML='';if(!cart.length){list.innerHTML='<div class="cart-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>No items added yet</div>';}else{cart.forEach(row=>{const el=document.createElement('div');el.className='cart-row';el.dataset.id=row.id;const emoji=getEmoji(row.name,'');el.innerHTML='<div class="cart-img">'+emoji+'</div><div class="cart-row-info"><div class="cname">'+escapeHtml(row.name)+'</div><div class="cprice">₹'+(row.price*row.qty).toFixed(2)+'</div></div><div class="qty-ctrl"><button onclick="changeQty(this,-1)">−</button><span class="qty-num">'+row.qty+'</span><button onclick="changeQty(this,1)">+</button></div><button class="rm" onclick="removeFromCart(this)">&#x1F5D1;</button>';list.appendChild(el);});}const sub=cart.reduce((s,r)=>s+r.price*r.qty,0);const tp=parseFloat(document.getElementById('taxPct').value)||0;const ta=sub*tp/100;const tot=sub+ta;document.getElementById('subtotal').innerText='₹'+sub.toFixed(2);document.getElementById('taxAmt').innerText='₹'+ta.toFixed(2);document.getElementById('grandTotal').innerText='₹'+tot.toFixed(2);document.getElementById('chargeBtnLabel').innerText='Charge ₹'+tot.toFixed(2);const totalQty=cart.reduce((sum,it)=>sum+it.qty,0);const badge=document.getElementById('mobileCartCount');if(badge)badge.textContent=totalQty;}
 async function loadTodayStats(targetDateStr){
   try{
     const r=await fetch(API+'/bills');
@@ -483,6 +688,11 @@ function toggleTheme(){
   document.getElementById('iconMoon').style.display=newTheme==='dark'?'none':'block';
   document.getElementById('iconSun').style.display=newTheme==='dark'?'block':'none';
 }
+function toggleMobileCart(show){
+  const panel=document.querySelector('.order-panel');
+  if(show)panel.classList.add('show-mobile');
+  else panel.classList.remove('show-mobile');
+}
 (function(){
   const saved=localStorage.getItem('cafeTheme');
   if(saved==='dark'){
@@ -493,5 +703,35 @@ function toggleTheme(){
 })();
 loadMenu();loadCafeName();loadSettingsPage();loadTodayStats();renderCart();
 </script>
+
+<!-- Floating Cart FAB for mobile -->
+<button class="mobile-cart-fab" onclick="toggleMobileCart(true)" title="View Cart">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+  <span class="badge" id="mobileCartCount">0</span>
+</button>
+
+<!-- Bottom Nav for mobile -->
+<div class="mobile-nav">
+  <a class="mobile-nav-item active" id="mob-nav-overview" href="#" onclick="showPage('overview');return false;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    <span>POS</span>
+  </a>
+  <a class="mobile-nav-item" id="mob-nav-orders" href="#" onclick="openHistory();return false;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+    <span>Orders</span>
+  </a>
+  <a class="mobile-nav-item" id="mob-nav-customers" href="#" onclick="showPage('customers');return false;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    <span>Customers</span>
+  </a>
+  <a class="mobile-nav-item" id="mob-nav-reports" href="#" onclick="showPage('reports');return false;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    <span>Reports</span>
+  </a>
+  <a class="mobile-nav-item" id="mob-nav-settings" href="#" onclick="showPage('settings');return false;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+    <span>Settings</span>
+  </a>
+</div>
 </body>
 </html>
