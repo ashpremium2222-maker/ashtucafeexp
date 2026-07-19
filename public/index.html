@@ -145,7 +145,39 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);-webk
 #receipt{display:none;}
 @media print{body *{visibility:hidden;}#receipt,#receipt *{visibility:visible;}#receipt{display:block;position:absolute;top:0;left:0;width:300px;font-family:monospace;color:#000;padding:10px;}#receipt .rname{font-size:1.2rem;text-align:center;font-weight:700;}#receipt .rsub{text-align:center;font-size:0.75rem;margin-bottom:10px;}#receipt .rline{border-top:1px dashed #000;margin:8px 0;}#receipt .rrow{display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:4px;}#receipt .rtotal{font-weight:700;font-size:1rem;}#receipt .rfoot{text-align:center;font-size:0.75rem;margin-top:14px;}}
 @media(max-width:1100px){:root{--order-w:300px;}.stats-grid{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:820px){.sidenav{display:none;}.main-content{margin-left:0;margin-right:0;}.order-panel{display:none;}.stats-grid{grid-column:1fr 1fr;}}</style>
+@media(max-width:820px){.sidenav{display:none;}.main-content{margin-left:0;margin-right:0;}.order-panel{display:none;}.stats-grid{grid-column:1fr 1fr;}}
+.page-section{display:none;padding:0 32px 32px;}
+.page-section.active{display:block;}
+.section-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);margin-bottom:20px;}
+.cust-list{display:flex;flex-direction:column;gap:10px;}
+.cust-row{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px 18px;cursor:pointer;transition:border-color 0.15s,box-shadow 0.15s;}
+.cust-row:hover{border-color:var(--primary-light);box-shadow:var(--card-shadow-hover);}
+.cust-row .cr-top{display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:0.92rem;}
+.cust-row .cr-sub{font-size:0.78rem;color:var(--text-muted);margin-top:3px;}
+.cust-bills{display:none;margin-top:10px;border-top:1px solid var(--border);padding-top:10px;}
+.cust-row.open .cust-bills{display:block;}
+.cust-bill-item{display:flex;justify-content:space-between;font-size:0.8rem;padding:5px 0;border-bottom:1px solid var(--border);}
+.cust-bill-item:last-child{border-bottom:none;}
+.report-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:28px;}
+.report-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:18px 20px;box-shadow:var(--card-shadow);}
+.report-card .rc-label{font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;}
+.report-card .rc-val{font-size:1.6rem;font-weight:700;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;}
+.report-card .rc-sub{font-size:0.75rem;color:var(--text-soft);margin-top:2px;}
+.report-table{width:100%;border-collapse:collapse;background:var(--white);border-radius:12px;overflow:hidden;box-shadow:var(--card-shadow);}
+.report-table th{background:var(--primary-bg);color:var(--primary);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;padding:10px 14px;text-align:left;}
+.report-table td{padding:10px 14px;font-size:0.84rem;border-bottom:1px solid var(--border);color:var(--text);}
+.report-table tr:last-child td{border-bottom:none;}
+.report-table tr:hover td{background:var(--primary-bg);}
+.settings-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px 24px;max-width:480px;margin-bottom:18px;box-shadow:var(--card-shadow);}
+.settings-card h4{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:1rem;color:var(--text);margin-bottom:14px;}
+.settings-card .field{margin-bottom:14px;}
+.settings-card .field label{display:block;font-size:0.74rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px;}
+.settings-card .field input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:0.9rem;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+.settings-card .field input:focus{border-color:var(--primary);}
+.settings-save-btn{background:var(--primary);color:white;border:none;padding:10px 24px;border-radius:10px;font-weight:600;font-size:0.88rem;cursor:pointer;font-family:'Inter',sans-serif;transition:background 0.15s;}
+.settings-save-btn:hover{background:#5a4bd1;}
+.save-feedback{font-size:0.8rem;color:var(--success);margin-left:10px;opacity:0;transition:opacity 0.3s;}
+.save-feedback.show{opacity:1;}</style>
 </head>
 <body>
 <nav class="sidenav">
@@ -154,14 +186,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);-webk
     <div class="brand-sub">POS System</div>
   </div>
   <div class="nav-section">Main</div>
-  <a class="nav-item active" href="#" onclick="return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Overview</a>
-  <a class="nav-item" href="#" onclick="return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>POS</a>
-  <a class="nav-item" href="#" onclick="openHistory();return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Orders</a>
-  <a class="nav-item" href="#" onclick="return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h7"/></svg>Tables</a>
+  <a class="nav-item active" id="nav-overview" href="#" onclick="showPage('overview');return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Overview</a>
+  <a class="nav-item" id="nav-orders" href="#" onclick="openHistory();return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Orders</a>
   <div class="nav-section">Management</div>
-  <a class="nav-item" href="#" onclick="return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Customers</a>
-  <a class="nav-item" href="#" onclick="return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Reports</a>
-  <a class="nav-item" href="#" onclick="return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>Settings</a>
+  <a class="nav-item" id="nav-customers" href="#" onclick="showPage('customers');return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Customers</a>
+  <a class="nav-item" id="nav-reports" href="#" onclick="showPage('reports');return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Reports</a>
+  <a class="nav-item" id="nav-settings" href="#" onclick="showPage('settings');return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>Settings</a>
   <div class="sidenav-upgrade">
     <div class="up-title">Upgrade to Premium</div>
     <div class="up-sub">Unlock advanced features and reports.</div>
@@ -185,7 +215,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);-webk
       <button class="add-item-btn" onclick="openModal()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Menu Item</button>
     </div>
   </header>
-  <div class="page">
+  <div class="page page-section active" id="page-overview">
     <div class="stats-grid">
       <div class="stat-card"><div class="stat-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div><div class="stat-info"><div class="stat-label" id="statSalesLabel">Today's Sales</div><div class="stat-value" id="statSales">&#x20B9;0</div><div class="stat-vs" id="statSalesVs">vs yesterday</div></div></div>
       <div class="stat-card"><div class="stat-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div><div class="stat-info"><div class="stat-label" id="statOrdersLabel">Total Orders</div><div class="stat-value" id="statOrders">0</div><div class="stat-vs" id="statOrdersVs">today</div></div></div>
@@ -198,6 +228,31 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);-webk
       <button class="filter-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>Filter</button>
     </div>
     <div class="grid" id="grid"></div>
+  </div>
+  <div class="page-section" id="page-customers">
+    <div class="section-title">Customers</div>
+    <div class="cust-list" id="custList"><div class="history-empty">Loading customers…</div></div>
+  </div>
+  <div class="page-section" id="page-reports">
+    <div class="section-title">Reports</div>
+    <div class="report-grid" id="reportSummary"></div>
+    <div class="section-title" style="font-size:1rem;margin-bottom:12px;">Top Selling Items</div>
+    <table class="report-table"><thead><tr><th>#</th><th>Item</th><th>Qty Sold</th><th>Revenue</th></tr></thead><tbody id="reportTable"></tbody></table>
+  </div>
+  <div class="page-section" id="page-settings">
+    <div class="section-title">Settings</div>
+    <div class="settings-card">
+      <h4>☕ Cafe Details</h4>
+      <div class="field"><label>Cafe Name</label><input type="text" id="settingCafeName" placeholder="Enter cafe name"></div>
+      <button class="settings-save-btn" onclick="saveSettingCafeName()">Save Changes</button>
+      <span class="save-feedback" id="saveNameFeedback">✓ Saved!</span>
+    </div>
+    <div class="settings-card">
+      <h4>🧾 Tax Settings</h4>
+      <div class="field"><label>Default Tax Rate (%)</label><input type="number" id="settingTax" placeholder="e.g. 5" min="0" max="100" step="0.1"></div>
+      <button class="settings-save-btn" onclick="saveSettingTax()">Save Changes</button>
+      <span class="save-feedback" id="saveTaxFeedback">✓ Saved!</span>
+    </div>
   </div>
 </div>
 <aside class="order-panel">
@@ -249,6 +304,18 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);-webk
 let menuItems=[],cart=[],activeCategory='All';
 const API='/api';
 function getEmoji(n,c){const s=(n+' '+c).toLowerCase();if(/coffee|cappuccino|latte|espresso|mocha/.test(s))return'☕️';if(/tea|chai/.test(s))return'🍵';if(/juice|lemonade|lime|mango/.test(s))return'🍹';if(/water|soda|cola|drink/.test(s))return'🥤';if(/pizza/.test(s))return'🍕';if(/burger/.test(s))return'🍔';if(/sandwich|sub/.test(s))return'🥪';if(/pasta|noodle/.test(s))return'🍝';if(/rice|biryani/.test(s))return'🍛';if(/chicken|grilled/.test(s))return'🍗';if(/salad/.test(s))return'🥗';if(/fries|chips/.test(s))return'🍟';if(/bread|toast|garlic/.test(s))return'🍞';if(/cake|dessert|chocolate/.test(s))return'🎂';if(/ice.?cream/.test(s))return'🍨';if(/soup/.test(s))return'🍲';if(/egg|omelette/.test(s))return'🍳';if(/wrap|roll/.test(s))return'🌯';return'🍽️';}
+function showPage(page){
+  document.querySelectorAll('.page-section').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  const nav=document.getElementById('nav-'+page);
+  if(nav)nav.classList.add('active');
+  const titles={overview:'Overview',customers:'Customers',reports:'Reports',settings:'Settings'};
+  document.querySelector('.topbar-title').textContent=titles[page]||page;
+  if(page==='customers')loadCustomers();
+  if(page==='reports')loadReports();
+  if(page==='settings')loadSettingsPage();
+}
 function updateTopbarDate(targetDate){
   const dateObj = targetDate ? new Date(targetDate) : new Date();
   document.getElementById('topbarDate').textContent=dateObj.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
@@ -256,6 +323,81 @@ function updateTopbarDate(targetDate){
 updateTopbarDate();
 async function loadCafeName(){try{const r=await fetch(API+'/settings/cafe-name');const d=await r.json();if(d.value){document.getElementById('cafeName').innerText=d.value;document.getElementById('rName').innerText=d.value;}}catch(e){}}
 document.getElementById('cafeName').addEventListener('blur',async(e)=>{const v=e.target.innerText.trim()||'Ashtu Cafe';document.getElementById('rName').innerText=v;try{await fetch(API+'/settings/cafe-name',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({value:v})});}catch(err){}});
+async function loadCustomers(){
+  const listEl=document.getElementById('custList');
+  listEl.innerHTML='<div class="history-empty">Loading…</div>';
+  try{
+    const r=await fetch(API+'/bills');
+    const bills=await r.json();
+    if(!bills.length){listEl.innerHTML='<div class="history-empty">No customers yet.</div>';return;}
+    let anon=0;
+    const map={};
+    bills.forEach(b=>{
+      let name=(b.customer||'').trim();
+      if(!name){anon++;name='Customer '+anon;}
+      if(!map[name])map[name]={name,bills:[],total:0};
+      map[name].bills.push(b);
+      map[name].total+=(b.total||0);
+    });
+    listEl.innerHTML='';
+    Object.values(map).sort((a,b)=>b.total-a.total).forEach(cust=>{
+      const row=document.createElement('div');
+      row.className='cust-row';
+      row.innerHTML='<div class="cr-top"><span>👤 '+escapeHtml(cust.name)+'</span><span style="color:var(--primary);font-weight:700;">₹'+cust.total.toFixed(2)+'</span></div><div class="cr-sub">'+cust.bills.length+' order(s)</div><div class="cust-bills">'+cust.bills.map(b=>'<div class="cust-bill-item"><span>'+new Date(b.createdAt).toLocaleString()+'</span><span style="font-weight:600;">₹'+b.total.toFixed(2)+'</span></div>').join('')+'</div>';
+      row.onclick=()=>row.classList.toggle('open');
+      listEl.appendChild(row);
+    });
+  }catch(e){listEl.innerHTML='<div class="history-empty">Could not load customers.</div>';}
+}
+async function loadReports(){
+  try{
+    const r=await fetch(API+'/bills');
+    const bills=await r.json();
+    const totalRev=bills.reduce((s,b)=>s+(b.total||0),0);
+    const today=new Date().toDateString();
+    const todayBills=bills.filter(b=>new Date(b.createdAt).toDateString()===today);
+    const todayRev=todayBills.reduce((s,b)=>s+(b.total||0),0);
+    const itemMap={};
+    bills.forEach(b=>(b.items||[]).forEach(it=>{
+      if(!itemMap[it.name])itemMap[it.name]={name:it.name,qty:0,rev:0};
+      itemMap[it.name].qty+=it.qty;
+      itemMap[it.name].rev+=it.price*it.qty;
+    }));
+    const topItems=Object.values(itemMap).sort((a,b)=>b.qty-a.qty).slice(0,10);
+    document.getElementById('reportSummary').innerHTML=
+      '<div class="report-card"><div class="rc-label">Total Revenue</div><div class="rc-val">₹'+totalRev.toFixed(0)+'</div><div class="rc-sub">All time</div></div>'+
+      '<div class="report-card"><div class="rc-label">Total Bills</div><div class="rc-val">'+bills.length+'</div><div class="rc-sub">All time</div></div>'+
+      '<div class="report-card"><div class="rc-label">Today Revenue</div><div class="rc-val">₹'+todayRev.toFixed(0)+'</div><div class="rc-sub">'+todayBills.length+' bills today</div></div>'+
+      '<div class="report-card"><div class="rc-label">Avg Bill Value</div><div class="rc-val">₹'+(bills.length?totalRev/bills.length:0).toFixed(0)+'</div><div class="rc-sub">per order</div></div>';
+    document.getElementById('reportTable').innerHTML=topItems.map((it,i)=>
+      '<tr><td>'+(i+1)+'</td><td>'+escapeHtml(it.name)+'</td><td>'+it.qty+'</td><td>₹'+it.rev.toFixed(2)+'</td></tr>'
+    ).join('');
+  }catch(e){}
+}
+async function loadSettingsPage(){
+  try{
+    const r=await fetch(API+'/settings/cafe-name');
+    const d=await r.json();
+    document.getElementById('settingCafeName').value=d.value||'';
+  }catch(e){}
+  document.getElementById('settingTax').value=document.getElementById('taxPct').value||'5';
+}
+async function saveSettingCafeName(){
+  const v=document.getElementById('settingCafeName').value.trim()||'Ashtu Cafe';
+  document.getElementById('cafeName').innerText=v;
+  document.getElementById('rName').innerText=v;
+  try{await fetch(API+'/settings/cafe-name',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({value:v})});}
+  catch(e){}
+  const fb=document.getElementById('saveNameFeedback');
+  fb.classList.add('show');setTimeout(()=>fb.classList.remove('show'),2000);
+}
+function saveSettingTax(){
+  const v=document.getElementById('settingTax').value||'5';
+  document.getElementById('taxPct').value=v;
+  renderCart();
+  const fb=document.getElementById('saveTaxFeedback');
+  fb.classList.add('show');setTimeout(()=>fb.classList.remove('show'),2000);
+}
 async function loadMenu(){try{const r=await fetch(API+'/menu');const raw=await r.json();menuItems=raw.map(i=>({...i,id:i._id}));}catch(e){menuItems=[];}document.getElementById('statItems').textContent=menuItems.length;buildMenuIndex();renderTabs();renderGrid();}
 async function addMenuItemToServer(name,price,cat){const r=await fetch(API+'/menu',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,price,category:cat})});const item=await r.json();return{...item,id:item._id};}
 async function deleteMenuItemOnServer(id){await fetch(API+'/menu/'+id,{method:'DELETE'});}
