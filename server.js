@@ -53,9 +53,9 @@ app.get('/api/bills', async (req, res) => {
 });
 
 app.post('/api/bills', async (req, res) => {
-  const { customer, items, subtotal, taxPct, taxAmt, total } = req.body;
+  const { customer, customerPhone, items, subtotal, taxPct, taxAmt, total } = req.body;
   if (!items || !items.length) return res.status(400).json({ error: 'items are required' });
-  const bill = await Bill.create({ customer, items, subtotal, taxPct, taxAmt, total });
+  const bill = await Bill.create({ customer, customerPhone, items, subtotal, taxPct, taxAmt, total });
   res.status(201).json(bill);
 });
 

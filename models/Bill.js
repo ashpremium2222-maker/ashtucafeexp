@@ -8,6 +8,7 @@ const BillItemSchema = new mongoose.Schema({
 
 const BillSchema = new mongoose.Schema({
   customer: { type: String, default: '' },
+  customerPhone: { type: String, default: '' },
   items: [BillItemSchema],
   subtotal: Number,
   taxPct: Number,
