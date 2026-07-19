@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cafe Billing</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --bg:#FFFFFF;
+    --panel:#FFF8DE;
+    --panel-soft:#FFFCF2;
+    --yellow:#F4C430;
+    --yellow-dark:#DDA912;
+    --ink:#332C1E;
+    --ink-soft:#5C5238;
+    --muted:#9A8F6E;
+    --line:#F0E4B0;
+    --line-strong:#E6D488;
+    --danger:#B84B36;
+    --sage:#6B7A5E;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .app{
+    display:grid;
+    grid-template-columns:1fr 380px;
+    min-height:100vh;
+  }
+
+  /* HEADER */
+  .topbar{
+    grid-column:1 / -1;
+    background:var(--panel);
+    border-bottom:1px solid var(--line-strong);
+    color:var(--ink);
+    padding:18px 28px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+  }
+  .topbar h1{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:1.5rem;
+    margin:0;
+    letter-spacing:0.01em;
+    outline:none;
+    cursor:text;
+  }
+  .topbar h1:hover{opacity:0.75;}
+  .topbar .tag{
+    font-size:0.72rem;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    color:var(--yellow-dark);
+    font-weight:700;
+    margin-top:2px;
+  }
+  .topbar-actions{display:flex;gap:10px;}
+  .add-item-btn, .history-btn{
+    border:none;
+    padding:10px 18px;
+    border-radius:6px;
+    font-weight:600;
+    font-size:0.88rem;
+    cursor:pointer;
+    font-family:'Inter',sans-serif;
+    transition:background 0.15s;
+  }
+  .add-item-btn{background:var(--yellow);color:var(--ink);}
+  .add-item-btn:hover{background:var(--yellow-dark);}
+  .history-btn{background:var(--panel-soft);color:var(--ink);border:1px solid var(--line-strong);}
+  .history-btn:hover{background:var(--panel);}
+
+  /* MAIN MENU AREA */
+  .menu-area{padding:24px 28px 40px;}
+
+  .tabs{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:12px;
+  }
+  .tab{
+    padding:7px 16px;
+    border-radius:20px;
+    font-size:0.85rem;
+    font-weight:600;
+    cursor:pointer;
+    background:transparent;
+    border:1px solid var(--line-strong);
+    color:var(--ink-soft);
+    font-family:'Inter',sans-serif;
+  }
+  .tab.active{
+    background:var(--yellow);
+    color:var(--ink);
+    border-color:var(--yellow);
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+    gap:14px;
+  }
+  .item-card{
+    background:var(--panel-soft);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:16px;
+    cursor:pointer;
+    position:relative;
+    transition:transform 0.1s, box-shadow 0.1s, border-color 0.1s;
+  }
+  .item-card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 4px 14px rgba(60,50,10,0.08);
+    border-color:var(--yellow);
+  }
+  .item-card .name{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:1.02rem;
+    margin-bottom:6px;
+    padding-right:20px;
+  }
+  .item-card .price{
+    color:var(--yellow-dark);
+    font-weight:700;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.95rem;
+  }
+  .item-card .del-btn{
+    position:absolute;
+    top:10px;
+    right:10px;
+    background:none;
+    border:none;
+    color:var(--muted);
+    cursor:pointer;
+    font-size:0.9rem;
+    padding:2px 5px;
+    border-radius:4px;
+    line-height:1;
+  }
+  .item-card .del-btn:hover{color:var(--danger);background:#FBE9E2;}
+  .empty-state{
+    color:var(--muted);
+    font-size:0.9rem;
+    padding:40px 0;
+    text-align:center;
+  }
+
+  /* SIDEBAR / ORDER */
+  .sidebar{
+    background:var(--panel-soft);
+    border-left:1px solid var(--line-strong);
+    color:var(--ink);
+    padding:22px 22px 24px;
+    display:flex;
+    flex-direction:column;
+    position:sticky;
+    top:0;
+    align-self:flex-start;
+    height:100vh;
+    overflow-y:auto;
+  }
+  .sidebar h2{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:1.15rem;
+    margin:0 0 4px;
+  }
+  .sidebar .sub{
+    font-size:0.75rem;
+    color:var(--muted);
+    margin-bottom:16px;
+  }
+  .meta-row{
+    display:flex;
+    gap:8px;
+    margin-bottom:16px;
+  }
+  .meta-row input{
+    flex:1;
+    background:var(--bg);
+    border:1px solid var(--line-strong);
+    color:var(--ink);
+    padding:8px 10px;
+    border-radius:6px;
+    font-size:0.82rem;
+    font-family:'Inter',sans-serif;
+  }
+  .meta-row input::placeholder{color:var(--muted);}
+
+  .cart-list{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-bottom:16px;
+    min-height:60px;
+  }
+  .cart-empty{
+    color:var(--muted);
+    font-size:0.85rem;
+    text-align:center;
+    padding:30px 0;
+  }
+  .cart-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:var(--panel);
+    padding:9px 10px;
+    border-radius:8px;
+    border:1px solid var(--line);
+  }
+  .cart-row .cname{
+    flex:1;
+    font-size:0.87rem;
+    font-weight:500;
+  }
+  .cart-row .cprice{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.8rem;
+    color:var(--ink-soft);
+    min-width:56px;
+    text-align:right;
+  }
+  .qty-ctrl{
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .qty-ctrl button{
+    width:20px;height:20px;
+    border-radius:4px;
+    border:1px solid var(--line-strong);
+    background:var(--bg);
+    color:var(--ink);
+    cursor:pointer;
+    font-size:0.85rem;
+    line-height:1;
+    padding:0;
+  }
+  .qty-ctrl button:hover{background:var(--yellow);}
+  .qty-ctrl .qty-num{width:16px;text-align:center;font-size:0.82rem;font-family:'IBM Plex Mono',monospace;}
+  .cart-row .rm{
+    background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.9rem;padding:0 2px;
+  }
+  .cart-row .rm:hover{color:var(--danger);}
+
+  .totals{
+    border-top:1px dashed var(--line-strong);
+    padding-top:14px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.85rem;
+  }
+  .totals .row{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:7px;
+    color:var(--ink-soft);
+  }
+  .totals .row.grand{
+    color:var(--ink);
+    font-size:1.05rem;
+    font-weight:700;
+    border-top:1px solid var(--line-strong);
+    padding-top:10px;
+    margin-top:4px;
+  }
+  .tax-input{
+    width:44px;
+    background:var(--bg);
+    border:1px solid var(--line-strong);
+    color:var(--ink);
+    border-radius:4px;
+    font-size:0.78rem;
+    text-align:center;
+    font-family:'IBM Plex Mono',monospace;
+    padding:2px;
+  }
+
+  .actions{
+    display:flex;
+    gap:8px;
+    margin-top:16px;
+  }
+  .btn{
+    flex:1;
+    padding:11px;
+    border-radius:7px;
+    border:none;
+    font-weight:600;
+    font-size:0.88rem;
+    cursor:pointer;
+    font-family:'Inter',sans-serif;
+  }
+  .btn.print{background:var(--yellow);color:var(--ink);}
+  .btn.print:hover{background:var(--yellow-dark);}
+  .btn.clear{background:var(--bg);color:var(--ink-soft);border:1px solid var(--line-strong);}
+  .btn.clear:hover{border-color:var(--danger);color:var(--danger);}
+
+  /* MODAL */
+  .overlay{
+    position:fixed;inset:0;
+    background:rgba(60,50,10,0.35);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    padding:20px;
+  }
+  .overlay.show{display:flex;}
+  .modal{
+    background:var(--bg);
+    border-radius:12px;
+    padding:26px;
+    width:320px;
+    box-shadow:0 20px 50px rgba(60,50,10,0.25);
+  }
+  .modal.wide{width:480px;max-height:80vh;overflow-y:auto;}
+  .modal h3{
+    font-family:'Fraunces',serif;
+    margin:0 0 16px;
+    font-size:1.2rem;
+  }
+  .field{margin-bottom:14px;}
+  .field label{
+    display:block;
+    font-size:0.75rem;
+    font-weight:600;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    margin-bottom:5px;
+  }
+  .field input,.field select{
+    width:100%;
+    padding:9px 10px;
+    border:1px solid var(--line-strong);
+    border-radius:6px;
+    font-size:0.9rem;
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+  }
+  .modal-actions{display:flex;gap:8px;margin-top:18px;}
+  .modal-actions button{
+    flex:1;padding:10px;border-radius:7px;border:none;font-weight:600;cursor:pointer;font-size:0.87rem;
+  }
+  .modal-actions .save{background:var(--yellow);color:var(--ink);}
+  .modal-actions .cancel{background:var(--panel);color:var(--ink);}
+
+  /* HISTORY LIST */
+  .history-list{display:flex;flex-direction:column;gap:8px;}
+  .history-empty{color:var(--muted);font-size:0.88rem;text-align:center;padding:24px 0;}
+  .history-row{
+    border:1px solid var(--line);
+    background:var(--panel-soft);
+    border-radius:8px;
+    padding:12px 14px;
+    cursor:pointer;
+  }
+  .history-row:hover{border-color:var(--yellow);}
+  .history-row .hr-top{display:flex;justify-content:space-between;font-size:0.85rem;font-weight:600;}
+  .history-row .hr-sub{font-size:0.75rem;color:var(--muted);margin-top:3px;}
+  .history-detail{border-top:1px solid var(--line);margin-top:10px;padding-top:10px;font-size:0.8rem;display:none;}
+  .history-row.open .history-detail{display:block;}
+  .history-detail .hd-row{display:flex;justify-content:space-between;margin-bottom:3px;}
+  .history-detail .reprint{
+    margin-top:8px;width:100%;padding:7px;border-radius:6px;border:none;background:var(--yellow);color:var(--ink);font-weight:600;cursor:pointer;font-size:0.8rem;
+  }
+
+  /* PRINT RECEIPT (hidden until print) */
+  #receipt{display:none;}
+
+  @media print{
+    body *{visibility:hidden;}
+    #receipt, #receipt *{visibility:visible;}
+    #receipt{
+      display:block;
+      position:absolute;
+      top:0;left:0;
+      width:300px;
+      font-family:'IBM Plex Mono',monospace;
+      color:#000;
+      padding:10px;
+    }
+    #receipt .rname{font-family:'Fraunces',serif;font-size:1.2rem;text-align:center;font-weight:700;}
+    #receipt .rsub{text-align:center;font-size:0.75rem;margin-bottom:10px;}
+    #receipt .rline{border-top:1px dashed #000;margin:8px 0;}
+    #receipt .rrow{display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:4px;}
+    #receipt .rtotal{font-weight:700;font-size:1rem;}
+    #receipt .rfoot{text-align:center;font-size:0.75rem;margin-top:14px;}
+  }
+
+  @media (max-width:820px){
+    .app{grid-template-columns:1fr;}
+    .sidebar{height:auto;position:relative;}
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="topbar">
+    <div>
+      <h1 id="cafeName" contenteditable="true" spellcheck="false">Your Cafe Name</h1>
+      <div class="tag">Menu &amp; Billing</div>
+    </div>
+    <div class="topbar-actions">
+      <button class="history-btn" onclick="openHistory()">Bill History</button>
+      <button class="add-item-btn" onclick="openModal()">+ Add Menu Item</button>
+    </div>
+  </div>
+
+  <div class="menu-area">
+    <div class="tabs" id="tabs"></div>
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <div class="sidebar">
+    <h2>Current Order</h2>
+    <div class="sub">Tap an item to add it</div>
+    <div class="meta-row">
+      <input type="text" id="custName" placeholder="Customer / Table">
+    </div>
+    <div class="cart-list" id="cartList"></div>
+    <div class="totals">
+      <div class="row"><span>Subtotal</span><span id="subtotal">₹0.00</span></div>
+      <div class="row"><span>Tax (<input class="tax-input" id="taxPct" value="5" oninput="renderCart()">%)</span><span id="taxAmt">₹0.00</span></div>
+      <div class="row grand"><span>Total</span><span id="grandTotal">₹0.00</span></div>
+    </div>
+    <div class="actions">
+      <button class="btn clear" onclick="clearOrder()">Clear</button>
+      <button class="btn print" onclick="saveAndPrintBill()">Save &amp; Print</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h3>Add Menu Item</h3>
+    <div class="field">
+      <label>Item Name</label>
+      <input type="text" id="newName" placeholder="e.g. Cappuccino">
+    </div>
+    <div class="field">
+      <label>Price (₹)</label>
+      <input type="number" id="newPrice" placeholder="e.g. 120" min="0" step="0.01">
+    </div>
+    <div class="field">
+      <label>Category</label>
+      <input type="text" id="newCategory" placeholder="e.g. Beverages" list="catList">
+      <datalist id="catList"></datalist>
+    </div>
+    <div class="modal-actions">
+      <button class="cancel" onclick="closeModal()">Cancel</button>
+      <button class="save" onclick="saveItem()">Add Item</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="historyOverlay">
+  <div class="modal wide">
+    <h3>Bill History</h3>
+    <div class="history-list" id="historyList"></div>
+    <div class="modal-actions">
+      <button class="cancel" onclick="closeHistory()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div id="receipt">
+  <div class="rname" id="rName">Your Cafe Name</div>
+  <div class="rsub" id="rDate"></div>
+  <div class="rsub" id="rCust"></div>
+  <div class="rline"></div>
+  <div id="rItems"></div>
+  <div class="rline"></div>
+  <div class="rrow"><span>Subtotal</span><span id="rSub"></span></div>
+  <div class="rrow"><span>Tax</span><span id="rTax"></span></div>
+  <div class="rline"></div>
+  <div class="rrow rtotal"><span>TOTAL</span><span id="rTot"></span></div>
+  <div class="rfoot">Thank you, visit again!</div>
+</div>
+
+<script>
+let menuItems = [];
+let cart = [];
+let activeCategory = 'All';
+
+const API = '/api';
+
+async function loadMenu(){
+  try{
+    const res = await fetch(API + '/menu');
+    const raw = await res.json();
+    menuItems = raw.map(i => ({...i, id: i._id}));
+  }catch(e){
+    console.error('Could not load menu from server', e);
+    menuItems = [];
+  }
+  renderTabs();
+  renderGrid();
+}
+
+async function addMenuItemToServer(name, price, category){
+  const res = await fetch(API + '/menu', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({name, price, category})
+  });
+  const item = await res.json();
+  return {...item, id: item._id};
+}
+
+async function deleteMenuItemOnServer(id){
+  await fetch(API + '/menu/' + id, { method: 'DELETE' });
+}
+
+async function loadCafeName(){
+  try{
+    const res = await fetch(API + '/settings/cafe-name');
+    const data = await res.json();
+    if(data.value){
+      document.getElementById('cafeName').innerText = data.value;
+      document.getElementById('rName').innerText = data.value;
+    }
+  }catch(e){}
+}
+document.getElementById('cafeName').addEventListener('blur', async (e)=>{
+  const val = e.target.innerText.trim() || 'Your Cafe Name';
+  document.getElementById('rName').innerText = val;
+  try{
+    await fetch(API + '/settings/cafe-name', {
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({value: val})
+    });
+  }catch(err){}
+});
+
+function getCategories(){
+  const cats = ['All', ...new Set(menuItems.map(i=>i.category || 'Uncategorized'))];
+  return cats;
+}
+
+function renderTabs(){
+  const tabs = document.getElementById('tabs');
+  tabs.innerHTML = '';
+  getCategories().forEach(cat=>{
+    const btn = document.createElement('button');
+    btn.className = 'tab' + (cat===activeCategory ? ' active' : '');
+    btn.innerText = cat;
+    btn.onclick = ()=>{ activeCategory = cat; renderTabs(); renderGrid(); };
+    tabs.appendChild(btn);
+  });
+}
+
+function renderGrid(){
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  const items = activeCategory==='All' ? menuItems : menuItems.filter(i=>i.category===activeCategory);
+  if(!items.length){
+    grid.innerHTML = '<div class="empty-state">No items yet. Click "Add Menu Item" to get started.</div>';
+    return;
+  }
+  items.forEach(item=>{
+    const card = document.createElement('div');
+    card.className = 'item-card';
+    card.onclick = (e)=>{ if(e.target.classList.contains('del-btn')) return; addToCart(item); };
+    card.innerHTML = `
+      <button class="del-btn" onclick="deleteItem('${item.id}')">✕</button>
+      <div class="name">${escapeHtml(item.name)}</div>
+      <div class="price">₹${Number(item.price).toFixed(2)}</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+async function deleteItem(id){
+  await deleteMenuItemOnServer(id);
+  menuItems = menuItems.filter(i=>i.id!==id);
+  renderTabs();
+  renderGrid();
+}
+
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.innerText = s;
+  return d.innerHTML;
+}
+
+function openModal(){
+  const dl = document.getElementById('catList');
+  dl.innerHTML = '';
+  [...new Set(menuItems.map(i=>i.category))].forEach(c=>{
+    const opt = document.createElement('option');
+    opt.value = c;
+    dl.appendChild(opt);
+  });
+  document.getElementById('newName').value='';
+  document.getElementById('newPrice').value='';
+  document.getElementById('newCategory').value='';
+  document.getElementById('overlay').classList.add('show');
+}
+function closeModal(){ document.getElementById('overlay').classList.remove('show'); }
+
+async function saveItem(){
+  const name = document.getElementById('newName').value.trim();
+  const price = parseFloat(document.getElementById('newPrice').value);
+  const category = document.getElementById('newCategory').value.trim() || 'Uncategorized';
+  if(!name || isNaN(price)){ alert('Please enter a valid name and price.'); return; }
+  const item = await addMenuItemToServer(name, price, category);
+  menuItems.push(item);
+  activeCategory = category;
+  renderTabs();
+  renderGrid();
+  closeModal();
+}
+
+function addToCart(item){
+  const existing = cart.find(c=>c.id===item.id);
+  if(existing) existing.qty += 1;
+  else cart.push({id:item.id, name:item.name, price:item.price, qty:1});
+  renderCart();
+}
+
+function changeQty(id, delta){
+  const row = cart.find(c=>c.id===id);
+  if(!row) return;
+  row.qty += delta;
+  if(row.qty<=0) cart = cart.filter(c=>c.id!==id);
+  renderCart();
+}
+
+function removeFromCart(id){
+  cart = cart.filter(c=>c.id!==id);
+  renderCart();
+}
+
+function clearOrder(){
+  cart = [];
+  document.getElementById('custName').value = '';
+  renderCart();
+}
+
+function renderCart(){
+  const list = document.getElementById('cartList');
+  list.innerHTML = '';
+  if(!cart.length){
+    list.innerHTML = '<div class="cart-empty">No items added yet</div>';
+  }
+  cart.forEach(row=>{
+    const el = document.createElement('div');
+    el.className = 'cart-row';
+    el.innerHTML = `
+      <span class="cname">${escapeHtml(row.name)}</span>
+      <div class="qty-ctrl">
+        <button onclick="changeQty('${row.id}',-1)">−</button>
+        <span class="qty-num">${row.qty}</span>
+        <button onclick="changeQty('${row.id}',1)">+</button>
+      </div>
+      <span class="cprice">₹${(row.price*row.qty).toFixed(2)}</span>
+      <button class="rm" onclick="removeFromCart('${row.id}')">✕</button>
+    `;
+    list.appendChild(el);
+  });
+
+  const subtotal = cart.reduce((s,r)=>s+r.price*r.qty,0);
+  const taxPct = parseFloat(document.getElementById('taxPct').value) || 0;
+  const taxAmt = subtotal * taxPct/100;
+  const total = subtotal + taxAmt;
+
+  document.getElementById('subtotal').innerText = '₹'+subtotal.toFixed(2);
+  document.getElementById('taxAmt').innerText = '₹'+taxAmt.toFixed(2);
+  document.getElementById('grandTotal').innerText = '₹'+total.toFixed(2);
+}
+
+async function saveAndPrintBill(){
+  if(!cart.length){ alert('Add at least one item before printing.'); return; }
+  const subtotal = cart.reduce((s,r)=>s+r.price*r.qty,0);
+  const taxPct = parseFloat(document.getElementById('taxPct').value) || 0;
+  const taxAmt = subtotal * taxPct/100;
+  const total = subtotal + taxAmt;
+  const cust = document.getElementById('custName').value.trim();
+  const now = new Date();
+
+  const billPayload = {
+    customer: cust,
+    items: cart.map(r=>({name:r.name, price:r.price, qty:r.qty})),
+    subtotal, taxPct, taxAmt, total
+  };
+
+  let bill = {...billPayload, date: now.toISOString()};
+  try{
+    const res = await fetch(API + '/bills', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(billPayload)
+    });
+    const saved = await res.json();
+    bill.date = saved.createdAt || now.toISOString();
+  }catch(e){
+    console.error('Could not save bill', e);
+  }
+
+  renderReceipt(bill, now);
+  window.print();
+}
+
+function renderReceipt(bill, now){
+  document.getElementById('rDate').innerText = now.toLocaleString();
+  document.getElementById('rCust').innerText = bill.customer ? ('Customer: '+bill.customer) : '';
+
+  const rItems = document.getElementById('rItems');
+  rItems.innerHTML = '';
+  bill.items.forEach(row=>{
+    const line = document.createElement('div');
+    line.className = 'rrow';
+    line.innerHTML = `<span>${escapeHtml(row.name)} x${row.qty}</span><span>₹${(row.price*row.qty).toFixed(2)}</span>`;
+    rItems.appendChild(line);
+  });
+
+  document.getElementById('rSub').innerText = '₹'+bill.subtotal.toFixed(2);
+  document.getElementById('rTax').innerText = '₹'+bill.taxAmt.toFixed(2)+' ('+bill.taxPct+'%)';
+  document.getElementById('rTot').innerText = '₹'+bill.total.toFixed(2);
+}
+
+async function openHistory(){
+  document.getElementById('historyOverlay').classList.add('show');
+  const listEl = document.getElementById('historyList');
+  listEl.innerHTML = '<div class="history-empty">Loading bills…</div>';
+
+  try{
+    const res = await fetch(API + '/bills');
+    const raw = await res.json();
+    const bills = raw.map(b => ({...b, id: b._id, date: b.createdAt}));
+    if(!bills.length){
+      listEl.innerHTML = '<div class="history-empty">No bills saved yet. Bills are saved automatically when you print.</div>';
+      return;
+    }
+    listEl.innerHTML = '';
+    bills.forEach(bill=>{
+      const row = document.createElement('div');
+      row.className = 'history-row';
+      const d = new Date(bill.date);
+      row.innerHTML = `
+        <div class="hr-top"><span>${bill.customer ? escapeHtml(bill.customer) : 'Walk-in'}</span><span>₹${bill.total.toFixed(2)}</span></div>
+        <div class="hr-sub">${d.toLocaleString()} · ${bill.items.length} item(s)</div>
+        <div class="history-detail">
+          ${bill.items.map(it=>`<div class="hd-row"><span>${escapeHtml(it.name)} x${it.qty}</span><span>₹${(it.price*it.qty).toFixed(2)}</span></div>`).join('')}
+          <div class="hd-row"><span>Subtotal</span><span>₹${bill.subtotal.toFixed(2)}</span></div>
+          <div class="hd-row"><span>Tax (${bill.taxPct}%)</span><span>₹${bill.taxAmt.toFixed(2)}</span></div>
+          <div class="hd-row" style="font-weight:700;"><span>Total</span><span>₹${bill.total.toFixed(2)}</span></div>
+          <button class="reprint" onclick="event.stopPropagation(); reprintBill('${bill.id}')">Reprint</button>
+        </div>
+      `;
+      row.onclick = ()=> row.classList.toggle('open');
+      row._bill = bill;
+      listEl.appendChild(row);
+    });
+    window._loadedBills = bills;
+  }catch(e){
+    listEl.innerHTML = '<div class="history-empty">Could not load bill history.</div>';
+  }
+}
+
+function reprintBill(billId){
+  const bill = (window._loadedBills || []).find(b=>b.id===billId);
+  if(!bill) return;
+  renderReceipt(bill, new Date(bill.date));
+  window.print();
+}
+
+function closeHistory(){ document.getElementById('historyOverlay').classList.remove('show'); }
+
+loadMenu();
+loadCafeName();
+renderCart();
+</script>
+
+</body>
+</html>
