@@ -59,6 +59,11 @@ app.post('/api/bills', async (req, res) => {
   res.status(201).json(bill);
 });
 
+app.delete('/api/bills/:id', async (req, res) => {
+  await Bill.findByIdAndDelete(req.params.id);
+  res.json({ ok: true });
+});
+
 // ---------- Settings routes ----------
 app.get('/api/settings/:key', async (req, res) => {
   const s = await Settings.findOne({ key: req.params.key });
