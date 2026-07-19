@@ -375,12 +375,20 @@ async function loadReports(){
   }catch(e){}
 }
 async function loadSettingsPage(){
-  try{
-    const r=await fetch(API+'/settings/cafe-name');
-    const d=await r.json();
-    document.getElementById('settingCafeName').value=d.value||'';
-  }catch(e){}
-  document.getElementById('settingTax').value=document.getElementById('taxPct').value||'5';
+    try{
+      // Load cafe name
+      const r1=await fetch(API+'/settings/cafe-name');
+      const d1=await r1.json();
+      document.getElementById('settingCafeName').value=d1.value||'';
+      // Load tax rate (stored under key "taxRate")
+      const r2=await fetch(API+'/settings/taxRate');
+      const d2=await r2.json();
+      const taxVal = d2.value !== null && d2.value !== undefined ? d2.value : '5';
+      document.getElementById('settingTax').value=taxVal;
+      document.getElementById('taxPct').value=taxVal; // sync current order tax input
+    }catch(e){}
+    // No longer set tax from UI defaults here – it is loaded from the DB above.
+
 }
 async function saveSettingCafeName(){
   const v=document.getElementById('settingCafeName').value.trim()||'Ashtu Cafe';
@@ -394,6 +402,12 @@ async function saveSettingCafeName(){
 function saveSettingTax(){
   const v=document.getElementById('settingTax').value||'5';
   document.getElementById('taxPct').value=v;
+  // Persist tax rate to DB under key "taxRate"
+  fetch(API+'/settings/taxRate',{
+    method:'PUT',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({value:v})
+  }).catch(()=>{});
   renderCart();
   const fb=document.getElementById('saveTaxFeedback');
   fb.classList.add('show');setTimeout(()=>fb.classList.remove('show'),2000);
@@ -477,7 +491,7 @@ function toggleTheme(){
     document.getElementById('iconSun').style.display='block';
   }
 })();
-loadMenu();loadCafeName();loadTodayStats();renderCart();
+loadMenu();loadCafeName();loadSettingsPage();loadTodayStats();renderCart();
 </script>
 </body>
 </html>
