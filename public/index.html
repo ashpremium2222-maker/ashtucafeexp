@@ -8,6 +8,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>:root{--primary:#6C5CE7;--primary-light:#a29bfe;--primary-bg:#EEF2FF;--bg:#F5F6FA;--white:#FFFFFF;--text:#1E1B2E;--text-soft:#6B7280;--text-muted:#9CA3AF;--border:#E5E7EB;--success:#10B981;--danger:#EF4444;--danger-bg:#FEF2F2;--card-shadow:0 1px 3px rgba(0,0,0,0.07);--card-shadow-hover:0 8px 25px rgba(108,92,231,0.15);--sidebar-w:220px;--order-w:340px;}
+[data-theme="dark"]{--bg:#0F0E17;--white:#1A1825;--text:#E8E6F0;--text-soft:#A09BB5;--text-muted:#6B677A;--border:#2A2740;--primary-bg:#1E1B35;--card-shadow:0 1px 3px rgba(0,0,0,0.3);--card-shadow-hover:0 8px 25px rgba(108,92,231,0.25);--danger-bg:#2D1B1B;}
+body,*{transition:background-color 0.25s ease,border-color 0.25s ease,color 0.2s ease;}
+.theme-toggle{width:38px;height:38px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text-soft);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.theme-toggle:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-bg);}
+.theme-toggle svg{width:17px;height:17px;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;display:flex;min-height:100vh;}
 .sidenav{width:var(--sidebar-w);background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:50;padding:0 0 24px;overflow-y:auto;}
@@ -169,6 +174,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);-webk
         <span>Business Date:</span>
         <input type="date" id="statsDateInput" class="topbar-date-picker" onchange="loadTodayStats(this.value)">
       </div>
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle dark mode">
+        <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
       <button class="history-btn" onclick="openHistory()">Bill History</button>
       <button class="add-item-btn" onclick="openModal()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Menu Item</button>
     </div>
@@ -306,6 +315,22 @@ function closeHistory(){document.getElementById('historyOverlay').classList.remo
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeHistory();}});
 document.getElementById('overlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
 document.getElementById('historyOverlay').addEventListener('click',function(e){if(e.target===this)closeHistory();});
+function toggleTheme(){
+  const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+  const newTheme=isDark?'light':'dark';
+  document.documentElement.setAttribute('data-theme',newTheme);
+  localStorage.setItem('cafeTheme',newTheme);
+  document.getElementById('iconMoon').style.display=newTheme==='dark'?'none':'block';
+  document.getElementById('iconSun').style.display=newTheme==='dark'?'block':'none';
+}
+(function(){
+  const saved=localStorage.getItem('cafeTheme');
+  if(saved==='dark'){
+    document.documentElement.setAttribute('data-theme','dark');
+    document.getElementById('iconMoon').style.display='none';
+    document.getElementById('iconSun').style.display='block';
+  }
+})();
 loadMenu();loadCafeName();loadTodayStats();renderCart();
 </script>
 </body>
