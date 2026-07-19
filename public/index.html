@@ -116,7 +116,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);-webk
 .order-actions-row button:hover{border-color:var(--danger);color:var(--danger);}
 .overlay{position:fixed;inset:0;background:rgba(15,10,40,0.45);display:none;align-items:center;justify-content:center;z-index:100;padding:20px;backdrop-filter:blur(3px);}
 .overlay.show{display:flex;}
-.modal{background:var(--white);border-radius:18px;padding:28px;width:340px;box-shadow:0 20px 60px rgba(108,92,231,0.2);animation:modal-in 0.2s ease;}
+.modal{background:var(--white);border-radius:18px;padding:28px;width:340px;box-shadow:0 20px 60px rgba(108,92,231,0.2);animation:modal-in 0.2s ease;position:relative;}
+.close-modal-btn{position:absolute;top:20px;right:20px;background:none;border:none;font-size:1.4rem;color:var(--text-soft);cursor:pointer;line-height:1;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.close-modal-btn:hover{background:var(--bg);color:var(--text);}
 .modal.wide{width:500px;max-height:80vh;overflow-y:auto;}
 @keyframes modal-in{from{opacity:0;transform:scale(0.95) translateY(10px);}to{opacity:1;transform:scale(1) translateY(0);}}
 .modal h3{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:1.15rem;margin-bottom:20px;color:var(--text);}
@@ -476,6 +478,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);-webk
 </aside>
 <div class="overlay" id="overlay">
   <div class="modal">
+    <button class="close-modal-btn" onclick="closeModal()">&times;</button>
     <h3>Add Menu Item</h3>
     <div class="field"><label>Item Name</label><input type="text" id="newName" placeholder="e.g. Cappuccino"></div>
     <div class="field"><label>Price (&#x20B9;)</label><input type="number" id="newPrice" placeholder="e.g. 120" min="0" step="0.01"></div>
@@ -485,6 +488,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);-webk
 </div>
 <div class="overlay" id="historyOverlay">
   <div class="modal wide">
+    <button class="close-modal-btn" onclick="closeHistory()">&times;</button>
     <h3>Bill History</h3>
     <div class="history-list" id="historyList"></div>
     <div class="modal-actions"><button class="cancel" onclick="closeHistory()">Close</button></div>
